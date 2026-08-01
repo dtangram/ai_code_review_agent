@@ -35,9 +35,18 @@ export const startReview = async (req: Request, res: Response): Promise<void> =>
   }
 
   const { pullNumber } = request;
-  const prTitle = await fetchPullRequestTitle(repoOwner, repoName, pullNumber);
-  const review = await createReview(request, prTitle);
-  const { id: reviewId } = review;
+
+  let reviewId: string;
+  try {
+    const prTitle = await fetchPullRequestTitle(repoOwner, repoName, pullNumber);
+    const review = await createReview(request, prTitle);
+    reviewId = review.id;
+  } catch (err) {
+    res.status(500).json({
+      error: err instanceof Error ? err.message : 'Failed to start review — check server logs.',
+    });
+    return;
+  }
 
   initSse(res);
 
@@ -71,7 +80,17 @@ export const getReview = async (req: Request, res: Response): Promise<void> => {
   }
 
   const { id } = parsed.data;
-  const review = await getReviewById(id);
+
+  let review;
+  try {
+    review = await getReviewById(id);
+  } catch (err) {
+    res.status(500).json({
+      error: err instanceof Error ? err.message : 'Failed to load review — check server logs.',
+    });
+    return;
+  }
+
   if (!review) {
     res.status(404).json({ error: 'Review not found' });
     return;
@@ -98,7 +117,16 @@ export const publishReview = async (req: Request, res: Response): Promise<void> 
   const { id } = idParsed.data;
   const { comments } = bodyParsed.data;
 
-  const review = await getReviewById(id);
+  let review;
+  try {
+    review = await getReviewById(id);
+  } catch (err) {
+    res.status(500).json({
+      error: err instanceof Error ? err.message : 'Failed to load review — check server logs.',
+    });
+    return;
+  }
+
   if (!review) {
     res.status(404).json({ error: 'Review not found' });
     return;
@@ -122,8 +150,14 @@ export const publishReview = async (req: Request, res: Response): Promise<void> 
 };
 
 export const listReviewsHandler = async (_req: Request, res: Response): Promise<void> => {
-  const reviews = await listReviews();
-  res.status(200).json(reviews);
+  try {
+    const reviews = await listReviews();
+    res.status(200).json(reviews);
+  } catch (err) {
+    res.status(500).json({
+      error: err instanceof Error ? err.message : 'Failed to load review history — check server logs.',
+    });
+  }
 };
 
 export const listAllowedReposHandler = (_req: Request, res: Response): void => {
