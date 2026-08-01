@@ -1,0 +1,113 @@
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+@use '../../styles/placeholders';
+
+.comment {
+  @include m.card;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-xs;
+
+  &.comment--accepted {
+    border-color: v.$color-severity-suggestion;
+  }
+
+  &.comment--dismissed {
+    opacity: 0.5;
+  }
+}
+
+@each $severity in ('info', 'suggestion', 'warning', 'critical') {
+  .sev--#{$severity} {
+    @include m.severity-border($severity);
+
+    .fix {
+      @include m.severity-fix-bg($severity);
+    }
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: v.$space-sm;
+}
+
+.path {
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-xs;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-family: v.$font-family-mono;
+  font-size: v.$font-size-sm;
+  color: v.$color-text-secondary;
+}
+
+.summary {
+  font-size: v.$font-size-md;
+  font-weight: 600;
+  margin: 0;
+}
+
+.explanation {
+  font-size: v.$font-size-base;
+  color: v.$color-text-secondary;
+  margin: 0;
+}
+
+.fix {
+  font-family: v.$font-family-mono;
+  font-size: v.$font-size-sm;
+  background: v.$color-bg;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-sm;
+  padding: v.$space-sm;
+  white-space: pre-wrap;
+}
+
+.actions {
+  display: flex;
+  gap: v.$space-xs;
+}
+
+.actionButton {
+  @extend %button-base;
+  @include m.focus-ring;
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-xs;
+  background: transparent;
+  transition: background-color v.$transition-fast, border-color v.$transition-fast, color v.$transition-fast;
+}
+
+.acceptButton {
+  border-color: v.$color-severity-suggestion;
+  color: v.$color-severity-suggestion;
+
+  &:hover {
+    background: rgba($color: v.$color-severity-suggestion, $alpha: 0.12);
+  }
+
+  &[aria-pressed='true'] {
+    background: v.$color-severity-suggestion;
+    color: v.$color-bg;
+  }
+}
+
+.dismissButton {
+  border-color: v.$color-border;
+  color: v.$color-text-secondary;
+
+  &:hover {
+    border-color: v.$color-text-secondary;
+    color: v.$color-text-primary;
+  }
+
+  &[aria-pressed='true'] {
+    border-color: v.$color-text-secondary;
+    color: v.$color-text-primary;
+  }
+}

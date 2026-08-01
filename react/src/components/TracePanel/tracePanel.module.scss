@@ -1,0 +1,120 @@
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+@use '../../styles/placeholders';
+
+.panel {
+  @include m.card;
+  display: flex;
+  flex-direction: column;
+  height: v.$panel-height;
+
+  @include m.respond-to('sm') {
+    height: 320px;
+  }
+}
+
+.heading {
+  @extend %panel-heading;
+  display: flex;
+  align-items: center;
+  gap: v.$space-xs;
+  flex-shrink: 0;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-xs;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  @include m.custom-scrollbar;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  gap: v.$space-sm;
+  align-items: flex-start;
+  padding: v.$space-xs 0;
+  animation: fade-in v.$transition-base;
+
+  &:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 0.875rem; // horizontal center of the 1.75rem icon chip
+    top: calc(1.75rem + #{v.$space-xs}); // bottom edge of this item's icon chip
+    bottom: calc(-1 * #{v.$space-xs}); // extends into the list's own gap to meet the next icon
+    width: 1px;
+    background: v.$color-border;
+    z-index: 0;
+  }
+}
+
+.icon {
+  @include m.icon-chip(v.$color-text-secondary);
+}
+
+.icon--tool_call {
+  @include m.icon-chip(v.$color-accent);
+}
+
+.icon--tool_result {
+  @include m.icon-chip(v.$color-severity-suggestion);
+}
+
+.icon--thinking {
+  @include m.icon-chip(v.$color-severity-warning);
+}
+
+.icon--comment {
+  @include m.icon-chip(v.$color-severity-info);
+}
+
+.icon--done {
+  @include m.icon-chip(v.$color-severity-suggestion);
+}
+
+.icon--error {
+  @include m.icon-chip(v.$color-severity-critical);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.label {
+  font-size: v.$font-size-base;
+  color: v.$color-text-primary;
+  overflow-wrap: anywhere;
+}
+
+.detail {
+  font-family: v.$font-family-mono;
+  font-size: v.$font-size-sm;
+  color: v.$color-text-secondary;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.empty {
+  color: v.$color-text-secondary;
+  font-size: v.$font-size-base;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

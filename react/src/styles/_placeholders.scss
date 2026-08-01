@@ -1,0 +1,36 @@
+@use 'variables' as v;
+
+%button-base {
+  font-family: v.$font-family-base;
+  font-size: v.$font-size-base;
+  font-weight: 600;
+  border-radius: v.$radius-sm;
+  border: 1px solid transparent;
+  padding: v.$space-xs v.$space-md;
+  cursor: pointer;
+  transition: background-color v.$transition-fast, border-color v.$transition-fast;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+%badge-base {
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-xs;
+  font-size: v.$font-size-sm;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+%panel-heading {
+  font-size: v.$font-size-md;
+  font-weight: 600;
+  color: v.$color-text-primary;
+  margin: 0 0 v.$space-sm;
+}

@@ -1,0 +1,88 @@
+@use 'sass:color';
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+@use '../../styles/placeholders';
+
+.form {
+  @include m.card-raised;
+  display: flex;
+  flex-wrap: wrap;
+  gap: v.$space-sm;
+  align-items: flex-end;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-xs;
+  flex: 1 1 160px;
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-xs;
+  font-size: v.$font-size-sm;
+  color: v.$color-text-secondary;
+}
+
+.input {
+  @include m.focus-ring;
+  background: v.$color-bg;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-sm;
+  color: v.$color-text-primary;
+  padding: v.$space-xs v.$space-sm;
+  font-size: v.$font-size-base;
+  transition: border-color v.$transition-fast, box-shadow v.$transition-fast;
+
+  &:hover {
+    border-color: v.$color-accent;
+  }
+
+  &:focus {
+    border-color: v.$color-accent;
+    box-shadow: 0 0 0 3px v.$color-accent-muted;
+  }
+}
+
+.hint {
+  font-size: v.$font-size-sm;
+  color: v.$color-severity-warning;
+}
+
+.submit {
+  @extend %button-base;
+  @include m.focus-ring;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: v.$space-xs;
+  background: v.$color-accent;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background: color.adjust(v.$color-accent, $lightness: -8%);
+  }
+
+  @include m.respond-to('sm') {
+    width: 100%;
+  }
+}
+
+.spinner {
+  animation: spin 900ms linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

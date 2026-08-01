@@ -1,0 +1,180 @@
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+@use '../../styles/placeholders';
+
+.app {
+  max-width: v.$max-width;
+  margin: 0 auto;
+  padding: v.$space-lg v.$space-md;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-lg;
+
+  @include m.respond-to('sm') {
+    padding: v.$space-md;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: v.$space-xs;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: v.$space-sm;
+  font-size: clamp(1.25rem, 5vw, #{v.$font-size-xl});
+  margin: 0;
+  color: v.$color-accent;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.subtitle {
+  color: v.$color-text-secondary;
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: v.$space-lg;
+  align-items: start;
+
+  @include m.respond-to('md') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.findingsPanel {
+  @include m.card;
+  display: flex;
+  flex-direction: column;
+  height: v.$panel-height;
+
+  @include m.respond-to('sm') {
+    height: 320px;
+  }
+}
+
+.findingsHeading {
+  @extend %panel-heading;
+  display: flex;
+  align-items: center;
+  gap: v.$space-xs;
+  flex-shrink: 0;
+}
+
+.countPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 v.$space-xs;
+  border-radius: 999px;
+  background: v.$color-accent-muted;
+  color: v.$color-accent;
+  font-size: v.$font-size-sm;
+  font-weight: 700;
+}
+
+.filterRow {
+  list-style: none;
+  margin: 0 0 v.$space-sm;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: v.$space-xs;
+  flex-shrink: 0;
+}
+
+.filterChip {
+  @include m.focus-ring;
+  border: 1px solid v.$color-border;
+  background: transparent;
+  color: v.$color-text-secondary;
+  border-radius: 999px;
+  padding: 3px v.$space-sm;
+  font-size: v.$font-size-sm;
+  cursor: pointer;
+  transition: border-color v.$transition-fast, color v.$transition-fast;
+
+  &:hover {
+    border-color: v.$color-accent;
+    color: v.$color-text-primary;
+  }
+
+  &[aria-pressed='true'] {
+    border-color: v.$color-accent;
+    background: v.$color-accent-muted;
+    color: v.$color-accent;
+  }
+}
+
+.findingsLoading {
+  display: flex;
+  align-items: center;
+  gap: v.$space-xs;
+  margin: 0 0 v.$space-sm;
+  padding: v.$space-sm;
+  border: 1px dashed v.$color-border;
+  border-radius: v.$radius-sm;
+  color: v.$color-text-secondary;
+  font-size: v.$font-size-sm;
+  flex-shrink: 0;
+}
+
+.loadingSpinner {
+  animation: spin 900ms linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.filterEmpty {
+  color: v.$color-text-secondary;
+  font-size: v.$font-size-base;
+  padding: v.$space-sm 0;
+}
+
+.commentList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-sm;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  @include m.custom-scrollbar;
+}
+
+.errorBanner {
+  display: flex;
+  align-items: center;
+  gap: v.$space-xs;
+  background: rgba(217, 83, 79, 0.12);
+  border: 1px solid v.$color-severity-critical;
+  color: v.$color-severity-critical;
+  border-radius: v.$radius-sm;
+  padding: v.$space-sm;
+}

@@ -1,0 +1,33 @@
+@use 'variables' as v;
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: v.$color-bg;
+  color: v.$color-text-primary;
+  font-family: v.$font-family-base;
+  font-size: v.$font-size-base;
+  line-height: 1.5;
+}
+
+:focus-visible {
+  outline: 2px solid v.$color-accent;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

@@ -1,0 +1,27 @@
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+@use '../../styles/placeholders';
+
+.badge {
+  @extend %badge-base;
+}
+
+.badge--info {
+  @include m.severity-color('info');
+  background: rgba($color: v.$color-severity-info, $alpha: 0.14);
+}
+
+.badge--suggestion {
+  @include m.severity-color('suggestion');
+  background: rgba($color: v.$color-severity-suggestion, $alpha: 0.14);
+}
+
+.badge--warning {
+  @include m.severity-color('warning');
+  background: rgba($color: v.$color-severity-warning, $alpha: 0.14);
+}
+
+.badge--critical {
+  @include m.severity-color('critical');
+  background: rgba($color: v.$color-severity-critical, $alpha: 0.14);
+}

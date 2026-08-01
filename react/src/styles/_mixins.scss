@@ -1,0 +1,146 @@
+@use 'variables' as v;
+
+@mixin focus-ring {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+
+  &:focus-visible {
+    outline: 2px solid v.$color-accent;
+    outline-offset: 2px;
+  }
+}
+
+@mixin card {
+  background: v.$color-surface;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+  padding: v.$space-md;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+// Raised, gradient-backed card matching the reference dashboard's stat/swap panels.
+@mixin card-raised {
+  background: linear-gradient(155deg, v.$color-card-gradient-start, v.$color-card-gradient-end);
+  border: 1px solid rgba($color: v.$color-accent, $alpha: 0.35);
+  border-radius: v.$radius-lg;
+  padding: v.$space-md;
+  box-shadow: 0 8px 28px rgba(15, 25, 90, 0.45);
+}
+
+@mixin custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: v.$color-border transparent;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: v.$color-border;
+    border-radius: 999px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: v.$color-accent;
+  }
+}
+
+@mixin scrollable-panel($max-height: 420px) {
+  max-height: $max-height;
+  overflow-y: auto;
+  @include custom-scrollbar;
+}
+
+@mixin severity-color($severity) {
+  @if $severity == 'info' {
+    color: v.$color-severity-info;
+  } @else if $severity == 'suggestion' {
+    color: v.$color-severity-suggestion;
+  } @else if $severity == 'warning' {
+    color: v.$color-severity-warning;
+  } @else if $severity == 'critical' {
+    color: v.$color-severity-critical;
+  } @else {
+    color: v.$color-text-secondary;
+  }
+}
+
+// Left-border accent so a list of cards can be scanned by severity color alone.
+@mixin severity-border($severity) {
+  @if $severity == 'info' {
+    border-left: 3px solid v.$color-severity-info;
+  } @else if $severity == 'suggestion' {
+    border-left: 3px solid v.$color-severity-suggestion;
+  } @else if $severity == 'warning' {
+    border-left: 3px solid v.$color-severity-warning;
+  } @else if $severity == 'critical' {
+    border-left: 3px solid v.$color-severity-critical;
+  } @else {
+    border-left: 3px solid v.$color-border;
+  }
+}
+
+// Suggested-fix code block: stays dark/translucent to match the dark theme
+// (a solid bright severity-color card, tried previously, read as an abrupt
+// light callout against the rest of the UI) — severity shows as a uniform
+// tinted border + overlay on all four sides, not filling the whole block.
+// Text stays $color-text-primary (light) throughout, since the background
+// is now a low-opacity tint over dark surfaces, not a solid bright fill —
+// contrast is effectively identical to any other card's body text.
+@mixin severity-fix-bg($severity) {
+  $tint: v.$color-border;
+  @if $severity == 'info' {
+    $tint: v.$color-severity-info;
+  } @else if $severity == 'suggestion' {
+    $tint: v.$color-severity-suggestion;
+  } @else if $severity == 'warning' {
+    $tint: v.$color-severity-warning;
+  } @else if $severity == 'critical' {
+    $tint: v.$color-severity-critical;
+  }
+  background: rgba($color: $tint, $alpha: 0.07);
+  border: 1px solid rgba($color: $tint, $alpha: 0.3);
+  color: v.$color-text-primary;
+}
+
+// Small tinted circular chip behind an icon, matching the reference dashboard's
+// colored icon badges (e.g. the bitcoin/coin icons) instead of a bare glyph.
+@mixin icon-chip($tint) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: rgba($tint, 0.16);
+  color: $tint;
+}
+
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'sm' {
+    @media (max-width: 640px) {
+      @content;
+    }
+  } @else if $breakpoint == 'md' {
+    @media (max-width: 960px) {
+      @content;
+    }
+  }
+}
