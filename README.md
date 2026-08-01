@@ -112,6 +112,7 @@ heroku open
 
 What makes this work, if you're curious or something breaks:
 - **`heroku-postbuild`** (in the root `package.json`) is Heroku's standard hook for monorepos — it installs and builds both `api` and `react` after Heroku's default `npm install` at the repo root finishes. It also sets `VITE_API_BASE_URL=` (empty) specifically for the React build, so the deployed bundle calls same-origin relative paths (`/api/reviews`) instead of `http://localhost:4000`.
+- Both installs use **`--include=dev`**: Heroku sets `NODE_ENV=production` during the build, and npm's default behavior is to skip `devDependencies` whenever that's set — but `typescript` (api) and `vite`/`sass`/`typescript` (react) are all devDependencies, and the build genuinely needs them to run `tsc`/`vite build`. Without this flag, the build fails with `tsc: not found` (or `vite: not found`) even though `npm install` reports success.
 - **`Procfile`** tells Heroku to run `node api/dist/index.js` — the compiled output of `api/app/index.ts`.
 - **`api/app/index.ts`** only serves the React build and its SPA fallback route when `NODE_ENV=production` — locally it does nothing, since Vite's dev server handles the frontend instead.
 - **Database connection**: Heroku Postgres only sets `DATABASE_URL` (not the discrete `PGHOST`/`PGUSER`/etc. vars), so `api/app/config/db.ts` automatically falls into its `DATABASE_URL` branch on Heroku — no config needed there.

@@ -4,7 +4,7 @@
   "private": true,
   "description": "AI Code Review Agent — Claude tool-use agent (api) + React trace/review UI (react)",
   "engines": {
-    "node": "20.x"
+    "node": "22.x"
   },
   "scripts": {
     "dev": "concurrently -n api,react -c blue,magenta \"npm run dev --prefix api\" \"npm run dev --prefix react\"",
@@ -14,7 +14,7 @@
     "start": "node api/dist/index.js",
     "test": "npm run test --prefix api && npm run test --prefix react",
     "install:all": "npm install --prefix api && npm install --prefix react",
-    "heroku-postbuild": "npm install --prefix api && npm run build --prefix api && npm install --prefix react && VITE_API_BASE_URL= npm run build --prefix react"
+    "heroku-postbuild": "npm install --prefix api --include=dev && npm run build --prefix api && npm install --prefix react --include=dev && VITE_API_BASE_URL= npm run build --prefix react"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"
