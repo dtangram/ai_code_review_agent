@@ -10,6 +10,7 @@ import {
   listReviews,
 } from '../db/models/review.model';
 import { closeSse, initSse, sendSseEvent } from '../utils/sse';
+import { logServerError } from '../utils/errors';
 import { validatePublishReview, validateReviewIdParam, validateReviewRequest } from '../utils/validation';
 
 export const startReview = async (req: Request, res: Response): Promise<void> => {
@@ -42,9 +43,8 @@ export const startReview = async (req: Request, res: Response): Promise<void> =>
     const review = await createReview(request, prTitle);
     reviewId = review.id;
   } catch (err) {
-    res.status(500).json({
-      error: err instanceof Error ? err.message : 'Failed to start review — check server logs.',
-    });
+    logServerError('startReview:createReview', err);
+    res.status(500).json({ error: "Couldn't start the review. Please try again." });
     return;
   }
 
@@ -60,10 +60,11 @@ export const startReview = async (req: Request, res: Response): Promise<void> =>
       timestamp: new Date().toISOString(),
     });
   } catch (err) {
+    logServerError('startReview:runCodeReviewAgent', err);
     await failReview(reviewId);
     sendSseEvent(res, {
       type: 'error',
-      label: err instanceof Error ? err.message : 'Agent run failed',
+      label: 'Something went wrong while reviewing this pull request. Please try again.',
       timestamp: new Date().toISOString(),
     });
   } finally {
@@ -85,9 +86,8 @@ export const getReview = async (req: Request, res: Response): Promise<void> => {
   try {
     review = await getReviewById(id);
   } catch (err) {
-    res.status(500).json({
-      error: err instanceof Error ? err.message : 'Failed to load review — check server logs.',
-    });
+    logServerError('getReview', err);
+    res.status(500).json({ error: "Couldn't load this review. Please try again." });
     return;
   }
 
@@ -121,9 +121,8 @@ export const publishReview = async (req: Request, res: Response): Promise<void> 
   try {
     review = await getReviewById(id);
   } catch (err) {
-    res.status(500).json({
-      error: err instanceof Error ? err.message : 'Failed to load review — check server logs.',
-    });
+    logServerError('publishReview:getReviewById', err);
+    res.status(500).json({ error: "Couldn't load this review. Please try again." });
     return;
   }
 
@@ -143,8 +142,9 @@ export const publishReview = async (req: Request, res: Response): Promise<void> 
     const { htmlUrl } = await publishReviewToGithub(repoOwner, repoName, pullNumber, comments);
     res.status(200).json({ htmlUrl });
   } catch (err) {
+    logServerError('publishReview:publishReviewToGithub', err);
     res.status(502).json({
-      error: err instanceof Error ? err.message : 'Failed to publish review to GitHub',
+      error: "Couldn't publish the review to GitHub. Please try again, or check that the PR still exists.",
     });
   }
 };
@@ -154,9 +154,8 @@ export const listReviewsHandler = async (_req: Request, res: Response): Promise<
     const reviews = await listReviews();
     res.status(200).json(reviews);
   } catch (err) {
-    res.status(500).json({
-      error: err instanceof Error ? err.message : 'Failed to load review history — check server logs.',
-    });
+    logServerError('listReviewsHandler', err);
+    res.status(500).json({ error: "Couldn't load review history. Please try again." });
   }
 };
 
