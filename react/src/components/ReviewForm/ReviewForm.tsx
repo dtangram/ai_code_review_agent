@@ -58,7 +58,7 @@ const ReviewForm = (): JSX.Element => {
           min={1}
           value={pullNumber}
           onChange={handlePullNumberChange}
-          placeholder="e.g. 42"
+          placeholder="1 - 37"
           required
         />
       </fieldset>
